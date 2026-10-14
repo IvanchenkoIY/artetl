@@ -1,3 +1,3 @@
 def greet(name: str) -> str:
-    """Return a greeting using a trimmed name."""
-    return f"Hello, {name.strip() or 'world'}!"
+    """Return a short greeting; blank names use world."""
+    return f"Hi, {name.strip() or 'world'}!"
