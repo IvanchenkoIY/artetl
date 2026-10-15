@@ -27,6 +27,7 @@ button {{ background: var(--accent); color: #fff; border: none; padding: .6rem 1
 <body>
 <main>
 <h1>Конжаковский Камень</h1>
+<p><a href="#register">Записаться на восхождение</a></p>
 {success_msg}
 <section>
 <h2>О походе</h2>
@@ -36,7 +37,7 @@ button {{ background: var(--accent); color: #fff; border: none; padding: .6rem 1
 <h2>Подготовка</h2>
 <p>Рекомендуется тренировка выносливости за 2–3 недели до похода. Возьмите удобную обувь, воду, лёгкую куртку и перекус. Погода на Урале переменчива — следите за прогнозом.</p>
 </section>
-<section>
+<section id="register">
 <h2>Запись</h2>
 <form method="post" action="/register">
 <label for="name">Имя</label>
