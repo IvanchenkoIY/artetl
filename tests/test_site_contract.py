@@ -113,3 +113,43 @@ class BookingContract(unittest.TestCase):
     a,wrapped=matching[0];self.assertTrue(wrapped or a.get('id') in p.labels);self.assertIn('required',a)
    self.assertIn('name="kind"',html);self.assertIn('Заявка принята',render_booking(kind,True))
   self.assertNotIn('<script',render_booking('<script>alert(1)</script>',False).lower())
+
+from urllib.parse import urlencode
+from urllib.request import build_opener, HTTPRedirectHandler
+class NoRedirect(HTTPRedirectHandler):
+ def redirect_request(self,*args,**kwargs):return None
+class BookingHTTP(SiteRoutes):
+ def post(self,path,data,origin=None,content_type='application/x-www-form-urlencoded'):
+  body=urlencode(data).encode() if not isinstance(data,bytes) else data
+  req=Request(self.origin+path,data=body,headers={'Content-Type':content_type,'Origin':origin or self.origin})
+  try:
+   with build_opener(NoRedirect()).open(req,timeout=3) as r:return r.status,r.headers,r.read()
+  except HTTPError as e:return e.code,e.headers,e.read()
+ def count(self):
+  with sqlite3.connect(os.environ['SQLITE_PATH']) as c:return c.execute('SELECT COUNT(*) FROM bookings').fetchone()[0]
+ def test_booking_http_success_and_navigation(self):
+  for path in ['/', '/cabins','/quad','/views','/booking']:
+   status,headers,body=self.get(path);self.assertEqual(status,200);s=Structure();s.feed(body.decode())
+   for link in ['/', '/cabins','/quad','/views','/booking']:self.assertIn(link,s.links)
+  for kind in ['hike','cabin','quad']:
+   html=self.get('/booking?kind='+kind)[2].decode();self.assertIn('action="/booking"',html)
+   day=(date.today()+timedelta(days=30)).isoformat()
+   code,headers,body=self.post('/booking',{'kind':kind,'name':'HTTP Test','email':'http@example.test','start_date':day,'people':'2'})
+   self.assertEqual(code,303);self.assertTrue(headers['Location'].startswith('/booking?'))
+   self.assertIn('Заявка принята',self.get(headers['Location'])[2].decode())
+  with sqlite3.connect(os.environ['SQLITE_PATH']) as c:
+   rows=c.execute("SELECT kind,people FROM bookings WHERE email=?",('http@example.test',)).fetchall()
+   self.assertEqual(rows,[('hike',2),('cabin',2),('quad',2)])
+  code,headers,_=self.post('/register',{'name':'Old Form','email':'old-http@example.test'});self.assertEqual(code,303)
+  with sqlite3.connect(os.environ['SQLITE_PATH']) as c:self.assertIn('old-http@example.test',str(c.execute('SELECT email FROM registrations').fetchall()))
+ def test_booking_http_invalid_no_insert(self):
+  day=(date.today()+timedelta(days=30)).isoformat();good={'kind':'hike','name':'HTTP Guard','email':'guard@example.test','start_date':day,'people':'2'}
+  self.assertEqual(self.post('/booking',good)[0],303);count=self.count()
+  for field,value in [('kind','bad'),('name',''),('email','bad'),('start_date','yesterday'),('people','2.5'),('people','0'),('people','13')]:
+   bad=good.copy();bad[field]=value;self.assertEqual(self.post('/booking',bad)[0],400)
+  self.assertEqual(self.post('/booking',urlencode(good).encode()+b'&kind=quad')[0],400)
+  self.assertEqual(self.post('/booking',good,origin='https://foreign.invalid')[0],403)
+  self.assertEqual(self.post('/booking',b'{}',content_type='application/json')[0],415)
+  self.assertEqual(self.post('/booking',b'x'*5000)[0],413)
+  self.assertEqual(self.post('/missing',good)[0],404);self.assertEqual(self.count(),count)
+  self.assertNotIn('<script>',self.get('/booking?kind=%3Cscript%3E')[2].decode().lower())
