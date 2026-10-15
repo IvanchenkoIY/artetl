@@ -61,3 +61,15 @@ class SiteRoutes(unittest.TestCase):
   for path in ['/not-a-page','/assets/../../README.md','/assets/%2e%2e/app.py','/assets/credits.json','/registrations.sqlite3']:
    with self.assertRaises(HTTPError) as e:self.get(path)
    self.assertEqual(e.exception.code,404)
+ def test_activity_pages(self):
+  for path in ['/', '/cabins', '/quad', '/views']:
+   html=self.get(path)[2].decode();p=Structure();p.feed(html)
+   for link in ['/', '/cabins', '/quad', '/views']:self.assertIn(link,p.links)
+  quad=self.get('/quad')[2].decode();views=self.get('/views')[2].decode()
+  for text in ['/assets/quad.jpg','Kenneth Allen','CC BY-SA','https://creativecommons.org/licenses/by-sa/2.0/']:
+   self.assertIn(text,quad)
+  for text in ['/assets/mountain.jpg','Makarenko Sasha','CC BY-SA','https://creativecommons.org/licenses/by-sa/3.0/']:
+   self.assertIn(text,views)
+  self.assertIn('квадро',quad.lower());self.assertTrue('обзор' in views.lower() or 'панорам' in views.lower())
+  self.assertIn('иллюстрац',quad.lower());self.assertIn('демонстрац',quad.lower());self.assertIn('демонстрац',views.lower())
+  for html in [quad,views]:self.assertNotIn('<script',html.lower())
