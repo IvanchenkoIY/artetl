@@ -73,3 +73,43 @@ class SiteRoutes(unittest.TestCase):
   self.assertIn('квадро',quad.lower());self.assertTrue('обзор' in views.lower() or 'панорам' in views.lower())
   self.assertIn('иллюстрац',quad.lower());self.assertIn('демонстрац',quad.lower());self.assertIn('демонстрац',views.lower())
   for html in [quad,views]:self.assertNotIn('<script',html.lower())
+
+import sqlite3
+from datetime import date,timedelta
+class SelectedOptions(HTMLParser):
+ def __init__(self):super().__init__();self.values=[]
+ def handle_starttag(self,tag,attrs):
+  a=dict(attrs)
+  if tag=='option' and 'selected' in a:self.values.append(a.get('value'))
+class BookingContract(unittest.TestCase):
+ def test_booking_persistence(self):
+  from src.booking import submit_booking
+  from src.registration import register
+  with tempfile.TemporaryDirectory() as temp:
+   db=Path(temp)/'data.sqlite3';register(db,'Прежняя запись','old@example.test')
+   day=(date.today()+timedelta(days=30)).isoformat()
+   for kind in ['hike','cabin','quad']:submit_booking(db,kind,'  Тестовый турист  ',' test@example.test ',day,2)
+   with sqlite3.connect(db) as c:
+    rows=c.execute('SELECT kind,name,email,start_date,people FROM bookings ORDER BY rowid').fetchall()
+    self.assertEqual(rows,[(kind,'Тестовый турист','test@example.test',day,2) for kind in ['hike','cabin','quad']])
+    self.assertEqual(c.execute('SELECT name,email FROM registrations').fetchall(),[('Прежняя запись','old@example.test')])
+ def test_booking_invalid_input(self):
+  from src.booking import submit_booking
+  with tempfile.TemporaryDirectory() as temp:
+   db=Path(temp)/'data.sqlite3';day=(date.today()+timedelta(days=30)).isoformat();good=['hike','Тестовый турист','test@example.test',day,2]
+   submit_booking(db,*good)
+   for index,values in [(0,['unknown','',"hike'); DROP TABLE bookings;--"]),(1,['','x','x'*81]),(2,['a','a@@b.test','a b@c.test','x'*255]),(3,['', '2026-99-99',day.replace('-',''),(date.today()-timedelta(days=1)).isoformat()]),(4,[0,13,-1,1.5,True,'2'])]:
+    for value in values:
+     args=good.copy();args[index]=value
+     with self.assertRaises(ValueError):submit_booking(db,*args)
+   with sqlite3.connect(db) as c:self.assertEqual(c.execute('SELECT COUNT(*) FROM bookings').fetchone()[0],1)
+ def test_booking_fragment(self):
+  from src.booking import render_booking
+  for kind in ['hike','cabin','quad']:
+   html=render_booking(kind,False);p=Structure();p.feed(html);selected=SelectedOptions();selected.feed(html);self.assertEqual(selected.values,[kind])
+   self.assertIn('action="/booking"',html);self.assertIn('method="post"',html);self.assertNotIn('Заявка принята',html)
+   for field in ['name','email','start_date','people']:
+    matching=[(a,wrapped) for a,wrapped in p.inputs if a.get('name')==field];self.assertEqual(len(matching),1)
+    a,wrapped=matching[0];self.assertTrue(wrapped or a.get('id') in p.labels);self.assertIn('required',a)
+   self.assertIn('name="kind"',html);self.assertIn('Заявка принята',render_booking(kind,True))
+  self.assertNotIn('<script',render_booking('<script>alert(1)</script>',False).lower())
