@@ -1,19 +1,26 @@
-# Конжак — учебная страница походов
+# Демонстрационный сайт «Конжак»
 
-Python 3.12+, только стандартная библиотека. Запуск: `python app.py`.
-Порт задаётся PORT (по умолчанию 8080); SQLITE_PATH задаёт файл заявок.
-Готовый транспорт в app.py вызывает src.page.render_page(success=False)
-и src.registration.register(db_path, name, email). Эти две функции предстоит
-реализовать модели. HTTP слой и тест baseline изменять не требуется.
-Форма POST /register: name и email. Успех → /?success=1; ошибка → HTTP 400.
-Заявки сохраняются локально, не отправляются. Это учебный сайт без реальных
-дат, цен и обещаний организации восхождения. Для тестов используйте example.test.
-Тесты: python -m unittest discover -s tests -v.
+Каждая новая задача продолжает опубликованную ветку предыдущей.
+1. Исправить работающую ссылку на форму.
+2. Общее оформление и маршруты пяти страниц.
+3. Домики: описание и выбор заявки.
+4. Квадротуры и обзорные точки: иллюстрации, описания.
+5. Общая заявка на поход, домик или тур; проверка и сохранение в SQLite.
+Это демонстрационные предложения без оплаты и обещания реальной доступности.
+tests/test_site_contract.py — независимый защищённый контракт приёмки.
 
-## Продолжение
+## Итерация 2
+app.py делегирует прежнему Handler в src/server.py (поведение не изменено).
+Доработать src/server.py и новый src/site.py: GET / и /cabins, общая навигация,
+ровно три JPEG из src/assets по белому списку. На главной сохранить render_page.
+GET /assets/credits.json и любой иной путь возвращает 404. /register сохраняется.
+Изображения — иллюстрации из открытых источников, авторы/лицензии в PHOTO_CREDITS.md.
+Указывать их подписи и ссылки на источник/лицензию прямо на соответствующей странице.
 
-Регистрация SQLite уже реализована и проверена. Реализовать осталось только
-`src/page.py` и `tests/test_page.py`. Функция `render_page(success=False)`
-возвращает полный русский HTML с встроенным CSS. Требования находятся в задаче.
-Существующий HTTP-сервер, регистрацию и её тесты сохранять.
-Исходный README проекта artetl сохранён. Ветка main не меняется.
+# Фотографии
+
+Иллюстрации, не обещание реального вида услуги. Изображения без изменений.
+
+- mountain.jpg: Makarenko Sasha; CC BY-SA 3.0; https://commons.wikimedia.org/wiki/File:G._Karpinsk,_Sverdlovskaya_oblast%27,_Russia_-_panoramio_(1).jpg; https://creativecommons.org/licenses/by-sa/3.0/
+- cabin.jpg: Brian M. Powell; CC BY-SA 3.0; https://commons.wikimedia.org/wiki/File:Monongahela_National_Forest_-_Middle_Mountain_Cabins.jpg; https://creativecommons.org/licenses/by-sa/3.0/
+- quad.jpg: Kenneth Allen; CC BY-SA 2.0; https://commons.wikimedia.org/wiki/File:Quad_bike,_Edergole_Road_-_geograph.org.uk_-_1727910.jpg; https://creativecommons.org/licenses/by-sa/2.0/

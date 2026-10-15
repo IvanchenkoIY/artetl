@@ -1,0 +1,32 @@
+[
+  {
+    "file": "mountain.jpg",
+    "bytes": 65326,
+    "sha256": "091b1d2ec6e8d36483f1eb0628c0ad353ea2bc456b73e79f4e48dfbb51e29190",
+    "author": "Makarenko Sasha",
+    "license": "CC BY-SA 3.0",
+    "source": "https://commons.wikimedia.org/wiki/File:G._Karpinsk,_Sverdlovskaya_oblast%27,_Russia_-_panoramio_(1).jpg",
+    "license_url": "https://creativecommons.org/licenses/by-sa/3.0/",
+    "changes": "Unmodified Wikimedia thumbnail/original; no edits"
+  },
+  {
+    "file": "cabin.jpg",
+    "bytes": 35174,
+    "sha256": "3f5b9f271801f3afbf130b2cbb0ebdea50ee1ffc3c509ab604ec877d960bed0d",
+    "author": "Brian M. Powell",
+    "license": "CC BY-SA 3.0",
+    "source": "https://commons.wikimedia.org/wiki/File:Monongahela_National_Forest_-_Middle_Mountain_Cabins.jpg",
+    "license_url": "https://creativecommons.org/licenses/by-sa/3.0/",
+    "changes": "Unmodified Wikimedia thumbnail/original; no edits"
+  },
+  {
+    "file": "quad.jpg",
+    "bytes": 77570,
+    "sha256": "8164fdce8c23d3a037d9bcbb34e60779d090fe62993c55912995305bb35b93b7",
+    "author": "Kenneth Allen",
+    "license": "CC BY-SA 2.0",
+    "source": "https://commons.wikimedia.org/wiki/File:Quad_bike,_Edergole_Road_-_geograph.org.uk_-_1727910.jpg",
+    "license_url": "https://creativecommons.org/licenses/by-sa/2.0/",
+    "changes": "Unmodified Wikimedia thumbnail/original; no edits"
+  }
+]
