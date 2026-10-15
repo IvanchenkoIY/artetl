@@ -1,25 +1,34 @@
-"""Small transport scaffold; page and persistence are implemented by Iriska."""
-import os
+import os, hashlib
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from urllib.parse import parse_qs, urlsplit
-from src.page import render_page
+from pathlib import Path
+from src.site import render_route
 from src.registration import register
 
+ASSETS={'/assets/mountain.jpg':'mountain.jpg','/assets/cabin.jpg':'cabin.jpg','/assets/quad.jpg':'quad.jpg'}
+CSP="default-src 'none'; style-src 'unsafe-inline'; img-src 'self'; form-action 'self'; base-uri 'none'; frame-ancestors 'none'"
+
 class Handler(BaseHTTPRequestHandler):
-    def reply(self, code, body, location=None):
-        data=body.encode('utf-8')
+    def reply(self, code, body, ctype='text/html; charset=utf-8', location=None):
+        data=body if isinstance(body,bytes) else body.encode('utf-8')
         self.send_response(code)
-        self.send_header('Content-Type','text/html; charset=utf-8')
+        self.send_header('Content-Type',ctype)
         self.send_header('Content-Length',str(len(data)))
         self.send_header('Cache-Control','no-store')
         self.send_header('X-Content-Type-Options','nosniff')
-        self.send_header('Content-Security-Policy',"default-src 'none'; style-src 'unsafe-inline'; form-action 'self'; base-uri 'none'; frame-ancestors 'none'")
+        self.send_header('Content-Security-Policy',CSP)
         if location:self.send_header('Location',location)
         self.end_headers();self.wfile.write(data)
     def do_GET(self):
         url=urlsplit(self.path)
-        if url.path!='/':return self.reply(404,'Не найдено')
-        self.reply(200,render_page(parse_qs(url.query).get('success')==['1']))
+        if url.path in ASSETS:
+            p=Path(__file__).parent/'assets'/ASSETS[url.path]
+            if p.is_file():self.reply(200,p.read_bytes(),'image/jpeg')
+            else:self.reply(404,'Не найдено')
+            return
+        html=render_route(url.path, parse_qs(url.query).get('success')==['1'])
+        if html is None:self.reply(404,'Не найдено')
+        else:self.reply(200,html)
     def do_POST(self):
         if self.path!='/register':return self.reply(404,'Не найдено')
         origin=self.headers.get('Origin')
