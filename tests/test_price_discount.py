@@ -1,6 +1,6 @@
 import unittest
 
-from route_price import discounted_total
+from src.route_price import discounted_total
 
 
 class DiscountTests(unittest.TestCase):
