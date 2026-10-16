@@ -24,3 +24,13 @@ def balance_due(total, paid):
     if paid < 0 or paid > total:
         raise ValueError("paid must be 0..total")
     return round(total - paid, 2)
+
+
+def stay_total(rate, nights, cabins=1):
+    if rate < 0:
+        raise ValueError("rate must be >= 0")
+    if isinstance(nights, bool) or not isinstance(nights, int) or nights < 1:
+        raise ValueError("nights must be int >= 1")
+    if isinstance(cabins, bool) or not isinstance(cabins, int) or cabins < 1:
+        raise ValueError("cabins must be int >= 1")
+    return round(rate * nights * cabins, 2)
