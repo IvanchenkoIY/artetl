@@ -58,26 +58,43 @@ def submit_booking(db_path, kind, name, email, start_date, people):
     return None
 
 
+_LABELS = {"hike": "Поход", "cabin": "Домик", "quad": "Квадротур"}
+
+
 def render_booking(kind, success=False):
     if kind not in KINDS:
         kind = "hike"
     options = "".join(
-        f'<option value="{k}"{" selected" if k == kind else ""}>{k}</option>' for k in KINDS
+        f'<option value="{k}"{" selected" if k == kind else ""}>{_LABELS[k]}</option>'
+        for k in KINDS
     )
     success_html = '<p>Заявка принята</p>' if success else ""
+    style = (
+        'style="box-sizing:border-box;max-width:100%;display:block;'
+        'font-family:system-ui,sans-serif;margin:0 0 8px;padding:0"'
+    )
+    btn_style = (
+        'style="box-sizing:border-box;max-width:100%;display:block;'
+        'background:#2e7d32;color:#fff;border:none;padding:10px;'
+        'font-size:1rem;cursor:pointer;margin-top:4px"'
+    )
     return (
-        f'<form method="post" action="/booking">'
-        f'<label for="kind">Услуга</label>'
-        f'<select name="kind" id="kind">{options}</select>'
-        f'<label for="name">Имя</label>'
-        f'<input type="text" name="name" id="name" required>'
-        f'<label for="email">Email</label>'
-        f'<input type="email" name="email" id="email" required>'
-        f'<label for="start_date">Дата</label>'
-        f'<input type="date" name="start_date" id="start_date" required>'
-        f'<label for="people">Человек</label>'
-        f'<input type="number" name="people" id="people" min="1" max="12" required>'
-        f'<button type="submit">Отправить</button>'
+        f'<form method="post" action="/booking" '
+        f'style="box-sizing:border-box;max-width:100%;display:block;'
+        f'font-family:system-ui,sans-serif">'
+        f'<p style="margin:0 0 12px;font-size:0.9rem;color:#555">'
+        f'Демонстрационная заявка: сохраняется локально, организатору не отправляется</p>'
+        f'<label for="kind" {style}>Услуга</label>'
+        f'<select name="kind" id="kind" {style}>{options}</select>'
+        f'<label for="name" {style}>Имя</label>'
+        f'<input type="text" name="name" id="name" required maxlength="80" {style}>'
+        f'<label for="email" {style}>Email</label>'
+        f'<input type="email" name="email" id="email" required maxlength="254" {style}>'
+        f'<label for="start_date" {style}>Дата</label>'
+        f'<input type="date" name="start_date" id="start_date" required {style}>'
+        f'<label for="people" {style}>Человек</label>'
+        f'<input type="number" name="people" id="people" min="1" max="12" value="2" required {style}>'
+        f'<button type="submit" {btn_style}>Отправить</button>'
         f"{success_html}"
         f"</form>"
     )
