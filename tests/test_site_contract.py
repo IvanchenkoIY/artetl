@@ -153,3 +153,11 @@ class BookingHTTP(SiteRoutes):
   self.assertEqual(self.post('/booking',b'x'*5000)[0],413)
   self.assertEqual(self.post('/missing',good)[0],404);self.assertEqual(self.count(),count)
   self.assertNotIn('<script>',self.get('/booking?kind=%3Cscript%3E')[2].decode().lower())
+
+class HomeEditorial(unittest.TestCase):
+ def test_demo_copy_and_registration_preserved(self):
+  html=render_page();lower=html.lower();self.assertIn('демонстрац',lower)
+  for unsupported in ['среднем урале','3–5 часов','3-5 часов','2–3 недели','2-3 недели']:self.assertNotIn(unsupported,lower)
+  self.assertIn('Конжаковский',html);self.assertIn('action="/register"',html)
+  s=Structure();s.feed(html);self.assertTrue(any(h.startswith('#') and h[1:] in s.targets for h in s.links))
+  self.assertNotIn('Заявка принята',html);self.assertIn('Заявка принята',render_page(True))
