@@ -8,3 +8,11 @@ def per_person(total, people):
     if people <= 0:
         raise ValueError("people must be > 0")
     return round(total / people, 2)
+
+
+def deposit_amount(total, percent):
+    if total < 0:
+        raise ValueError("total must be >= 0")
+    if not 0 <= percent <= 100:
+        raise ValueError("percent must be 0..100")
+    return round(total * percent / 100, 2)
