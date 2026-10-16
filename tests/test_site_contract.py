@@ -172,3 +172,22 @@ class BookingPresentation(unittest.TestCase):
   self.assertEqual(fields['name'].get('maxlength'),'80');self.assertEqual(fields['email'].get('maxlength'),'254')
   self.assertEqual(fields['people'].get('min'),'1');self.assertEqual(fields['people'].get('max'),'12')
   self.assertIn('демонстрац',html.lower());self.assertNotIn('<script',html.lower())
+
+class BookingHeading(unittest.TestCase):
+ def test_one_booking_heading_and_existing_form(self):
+  from src.site import render_route
+  class Headings(HTMLParser):
+   def __init__(self):super().__init__();self.values=[];self.inside=False
+   def handle_starttag(self,tag,attrs):
+    if tag=='h1':self.values.append('');self.inside=True
+   def handle_data(self,data):
+    if self.inside:self.values[-1]+=data
+   def handle_endtag(self,tag):
+    if tag=='h1':self.inside=False
+  for kind in ['hike','cabin','quad']:
+   for success in [False,True]:
+    html=render_route('/booking',success=success,kind=kind);h=Headings();h.feed(html)
+    self.assertEqual(len(h.values),1,'Страница заявки должна иметь ровно один заголовок h1')
+    self.assertIn('заяв',h.values[0].lower());self.assertIn('action="/booking"',html)
+    s=Structure();s.feed(html)
+    for link in ['/','/cabins','/quad','/views','/booking']:self.assertIn(link,s.links)
