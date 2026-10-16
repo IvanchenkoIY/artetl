@@ -4,6 +4,7 @@ from urllib.parse import parse_qs, urlsplit
 from pathlib import Path
 from src.site import render_route
 from src.registration import register
+from src.booking import submit_booking
 
 ASSETS={'/assets/mountain.jpg':'mountain.jpg','/assets/cabin.jpg':'cabin.jpg','/assets/quad.jpg':'quad.jpg'}
 CSP="default-src 'none'; style-src 'unsafe-inline'; img-src 'self'; form-action 'self'; base-uri 'none'; frame-ancestors 'none'"
@@ -26,22 +27,32 @@ class Handler(BaseHTTPRequestHandler):
             if p.is_file():self.reply(200,p.read_bytes(),'image/jpeg')
             else:self.reply(404,'Не найдено')
             return
-        html=render_route(url.path, parse_qs(url.query).get('success')==['1'])
+        q=parse_qs(url.query)
+        html=render_route(url.path, q.get('success')==['1'], q.get('kind',[''])[0] or None)
         if html is None:self.reply(404,'Не найдено')
         else:self.reply(200,html)
     def do_POST(self):
-        if self.path!='/register':return self.reply(404,'Не найдено')
+        if self.path!='/register' and self.path!='/booking':return self.reply(404,'Не найдено')
         origin=self.headers.get('Origin')
         if origin and urlsplit(origin).netloc!=self.headers.get('Host'):return self.reply(403,'Недопустимый источник')
         if self.headers.get('Content-Type','').split(';')[0]!='application/x-www-form-urlencoded':return self.reply(415,'Неверный формат')
         try:
             size=int(self.headers.get('Content-Length','0'))
-            if not 0<size<=2048:return self.reply(413,'Слишком большой запрос')
-            data=parse_qs(self.rfile.read(size).decode('utf-8'),keep_blank_values=True,max_num_fields=4)
-            if set(data)!={'name','email'} or any(len(v)!=1 for v in data.values()):raise ValueError()
-            register(os.environ.get('SQLITE_PATH','registrations.sqlite3'),data['name'][0],data['email'][0])
-        except (ValueError,UnicodeError):return self.reply(400,'Проверьте имя и email. <a href="/">Вернуться</a>')
-        self.reply(303,'',location='/?success=1')
+            if self.path=='/register':
+                if not 0<size<=2048:return self.reply(413,'Слишком большой запрос')
+                data=parse_qs(self.rfile.read(size).decode('utf-8'),keep_blank_values=True,max_num_fields=4)
+                if set(data)!={'name','email'} or any(len(v)!=1 for v in data.values()):raise ValueError()
+                register(os.environ.get('SQLITE_PATH','registrations.sqlite3'),data['name'][0],data['email'][0])
+                self.reply(303,'',location='/?success=1')
+            else:
+                if not 0<size<=4096:return self.reply(413,'Слишком большой запрос')
+                data=parse_qs(self.rfile.read(size).decode('utf-8'),keep_blank_values=True,max_num_fields=6)
+                if set(data)!={'kind','name','email','start_date','people'} or any(len(v)!=1 for v in data.values()):raise ValueError()
+                try: people=int(data['people'][0])
+                except ValueError: raise ValueError()
+                submit_booking(os.environ.get('SQLITE_PATH','registrations.sqlite3'),data['kind'][0],data['name'][0],data['email'][0],data['start_date'][0],people)
+                self.reply(303,'',location='/booking?success=1')
+        except (ValueError,UnicodeError):return self.reply(400,'Проверьте данные. <a href="/">Вернуться</a>')
     def log_message(self,*args):pass
 
 if __name__=='__main__':
