@@ -42,3 +42,10 @@ def booking_quote(rate, nights, cabins, discount, deposit):
     dep = deposit_amount(discounted, deposit)
     bal = balance_due(discounted, dep)
     return {"total": discounted, "deposit": dep, "balance": bal}
+
+
+def quote_summary(quotes):
+    total = round(sum(q["total"] for q in quotes), 2)
+    deposit = round(sum(q["deposit"] for q in quotes), 2)
+    balance = round(sum(q["balance"] for q in quotes), 2)
+    return {"count": len(quotes), "total": total, "deposit": deposit, "balance": balance}
