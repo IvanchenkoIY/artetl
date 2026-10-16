@@ -161,3 +161,14 @@ class HomeEditorial(unittest.TestCase):
   self.assertIn('Конжаковский',html);self.assertIn('action="/register"',html)
   s=Structure();s.feed(html);self.assertTrue(any(h.startswith('#') and h[1:] in s.targets for h in s.links))
   self.assertNotIn('Заявка принята',html);self.assertIn('Заявка принята',render_page(True))
+
+class BookingPresentation(unittest.TestCase):
+ def test_human_labels_and_form_limits(self):
+  from src.booking import render_booking
+  html=render_booking('cabin');p=Structure();p.feed(html)
+  for label in ['Поход','Домик','Квадротур']:self.assertIn(label,html)
+  for token in ['>hike</option>','>cabin</option>','>quad</option>']:self.assertNotIn(token,html)
+  fields={a.get('name'):a for a,_ in p.inputs}
+  self.assertEqual(fields['name'].get('maxlength'),'80');self.assertEqual(fields['email'].get('maxlength'),'254')
+  self.assertEqual(fields['people'].get('min'),'1');self.assertEqual(fields['people'].get('max'),'12')
+  self.assertIn('демонстрац',html.lower());self.assertNotIn('<script',html.lower())
