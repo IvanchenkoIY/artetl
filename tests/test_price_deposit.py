@@ -1,6 +1,6 @@
 import unittest
 
-from route_price import deposit_amount
+from src.route_price import deposit_amount
 
 
 class DepositTests(unittest.TestCase):
