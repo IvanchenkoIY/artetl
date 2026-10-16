@@ -6,7 +6,7 @@ def render_page(success=False):
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Конжаковский Камень</title>
+<title>Конжаковский Камень — Учебный сайт</title>
 <style>
 :root {{ --bg: #f0f4e8; --card: #ffffff; --text: #2c3e2d; --accent: #4a7c59; --muted: #6b8f71; }}
 * {{ box-sizing: border-box; margin: 0; padding: 0; }}
@@ -31,7 +31,11 @@ button {{ background: var(--accent); color: #fff; border: none; padding: .6rem 1
 {success_msg}
 <section>
 <h2>О походе</h2>
-<p>Конжаковский Камень — гора на Урале, известная горными панорамами и интересом к прогулкам. Точные маршрут, дату, условия и подготовку нужно согласовать с организатором перед реальным походом.</p>
+<p>Конжаковский Камень — гора на Урале, известная горными панорамами и интересом к прогулкам.</p>
+</section>
+<section>
+<h2>Подготовка</h2>
+<p>Точные маршрут, дату, условия и подготовку нужно согласовать с организатором перед реальным походом.</p>
 </section>
 <section id="register">
 <h2>Запись</h2>
@@ -41,7 +45,7 @@ button {{ background: var(--accent); color: #fff; border: none; padding: .6rem 1
 <label for="email">Email</label>
 <input type="email" id="email" name="email" maxlength="254" required>
 <button type="submit">Записаться</button>
-<p class="note">Учебный сайт: Демонстрационный сайт: заявки сохраняются локально и не передаются организатору.</p>
+<p class="note">Демонстрационный сайт: заявки сохраняются локально и не передаются организатору.</p>
 </form>
 </section>
 </main>
