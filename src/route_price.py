@@ -34,3 +34,11 @@ def stay_total(rate, nights, cabins=1):
     if isinstance(cabins, bool) or not isinstance(cabins, int) or cabins < 1:
         raise ValueError("cabins must be int >= 1")
     return round(rate * nights * cabins, 2)
+
+
+def booking_quote(rate, nights, cabins, discount, deposit):
+    total = stay_total(rate, nights, cabins)
+    discounted = discounted_total([total], discount)
+    dep = deposit_amount(discounted, deposit)
+    bal = balance_due(discounted, dep)
+    return {"total": discounted, "deposit": dep, "balance": bal}
