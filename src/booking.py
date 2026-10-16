@@ -79,6 +79,7 @@ def render_booking(kind, success=False):
         'font-size:1rem;cursor:pointer;margin-top:4px"'
     )
     return (
+        '<h1>Заявка</h1>'
         f'<form method="post" action="/booking" '
         f'style="box-sizing:border-box;max-width:100%;display:block;'
         f'font-family:system-ui,sans-serif">'
