@@ -9,3 +9,5 @@ def tour_duration(kind):
         return 180
     else:
         raise ValueError(f"Unknown tour kind: {kind}")
+
+# Developer correction from Iriska task chat editor.
