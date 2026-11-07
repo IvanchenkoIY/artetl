@@ -1,0 +1,7 @@
+schema: 1
+roles:
+  planner: iriska/agents/planner.md
+  developer: iriska/agents/developer.md
+  tester: iriska/agents/tester.md
+skills:
+  decomposition: iriska/skills/decomposition.md

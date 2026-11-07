@@ -1,0 +1,1 @@
+Run only the registered Java contract checks. Report actual stdout, exit code and commit. Never infer success from the developer response.
