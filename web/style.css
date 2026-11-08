@@ -74,6 +74,18 @@ main {
 
 .hero p { margin: 0 0 1rem; color: var(--muted); }
 
+section {
+  margin: 0 0 2rem;
+}
+
+section h2 {
+  margin: 0 0 0.75rem;
+  font-size: 1.3rem;
+  color: var(--pine-dark);
+}
+
+section p { margin: 0 0 0.75rem; }
+
 .button {
   display: inline-block;
   background: var(--pine);
@@ -85,6 +97,10 @@ main {
 }
 
 .button:hover { background: var(--pine-dark); }
+
+.photo {
+  margin: 0 0 1rem;
+}
 
 .photo img {
   display: block;
@@ -113,4 +129,5 @@ main {
   nav ul { flex-direction: column; gap: 0.15rem; }
   main { padding: 1rem 1rem 2rem; }
   .hero h1 { font-size: 1.4rem; }
+  section h2 { font-size: 1.15rem; }
 }
