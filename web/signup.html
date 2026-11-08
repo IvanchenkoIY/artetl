@@ -24,6 +24,29 @@
 </select>
 <button type="submit">Отправить</button>
 </form>
+<p role="status" aria-live="polite"></p>
 </main>
+<script>
+document.querySelector('form').addEventListener('submit', async function(e) {
+  e.preventDefault();
+  const status = document.querySelector('[role=status]');
+  status.textContent = 'Отправка…';
+  try {
+    const body = new URLSearchParams(new FormData(this));
+    const res = await fetch('/signup', {
+      method: 'POST',
+      headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+      body: body.toString()
+    });
+    if (res.status === 201) {
+      status.textContent = 'Демонстрационная заявка принята. Это не реальное бронирование.';
+    } else {
+      status.textContent = 'Ошибка: проверьте правильность заполнения полей.';
+    }
+  } catch (err) {
+    status.textContent = 'Ошибка сети. Попробуйте позже.';
+  }
+});
+</script>
 </body>
 </html>
