@@ -14,10 +14,18 @@ public final class Booking {
         if (name == null) throw new IllegalArgumentException("name");
         name = name.trim();
         if (name.isEmpty() || name.length() > 100) throw new IllegalArgumentException("name");
+        for (int i = 0; i < name.length(); i++) {
+            char c = name.charAt(i);
+            if (c == '<' || c == '>' || c < 0x20) throw new IllegalArgumentException("name");
+        }
 
         if (email == null) throw new IllegalArgumentException("email");
         email = email.trim();
         if (email.length() > 254) throw new IllegalArgumentException("email");
+        for (int i = 0; i < email.length(); i++) {
+            char c = email.charAt(i);
+            if (Character.isWhitespace(c) || c < 0x20) throw new IllegalArgumentException("email");
+        }
         int at = email.indexOf('@');
         if (at <= 0 || at == email.length() - 1) throw new IllegalArgumentException("email");
         String domain = email.substring(at + 1);
