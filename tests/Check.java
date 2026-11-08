@@ -1,0 +1,19 @@
+import java.net.*;import java.net.http.*;import java.nio.file.*;import java.nio.charset.StandardCharsets;import java.util.*;
+class Check {
+ static final HttpClient HTTP=HttpClient.newHttpClient();static String base;
+ static void require(boolean ok,String message){if(!ok)throw new AssertionError(message);}
+ static String page(String path,String... words)throws Exception{var r=HTTP.send(HttpRequest.newBuilder(URI.create(base+path)).GET().build(),HttpResponse.BodyHandlers.ofString());require(r.statusCode()==200,path+" status");String text=r.body();for(String word:words)require(text.contains(word),path+" missing "+word);require(text.contains("lang=\"ru\"")&&text.contains("<main")&&text.contains("<nav"),path+" semantic structure");require(!text.contains("https://")&&!text.contains("http://"),"external resource");return text;}
+ static int post(String name,String email,String route)throws Exception{String body="name="+URLEncoder.encode(name,StandardCharsets.UTF_8)+"&email="+URLEncoder.encode(email,StandardCharsets.UTF_8)+"&route="+URLEncoder.encode(route,StandardCharsets.UTF_8);return HTTP.send(HttpRequest.newBuilder(URI.create(base+"/signup")).header("Content-Type","application/x-www-form-urlencoded").POST(HttpRequest.BodyPublishers.ofString(body)).build(),HttpResponse.BodyHandlers.ofString()).statusCode();}
+ public static void main(String[] args)throws Exception{
+ int phase=Integer.parseInt(args[0]);Path classes=Files.createTempDirectory("ural-classes"),data=Files.createTempDirectory("ural-data");var javac=new ArrayList<String>(List.of("javac","-encoding","UTF-8","-d",classes.toString()));try(var paths=Files.list(Path.of("src"))){paths.filter(p->p.toString().endsWith(".java")).forEach(p->javac.add(p.toString()));}require(new ProcessBuilder(javac).inheritIO().start().waitFor()==0,"javac");
+ var pb=new ProcessBuilder("java","-cp",classes.toString(),"Server","0");pb.environment().put("URAL_DATA",data.toString());Process server=pb.start();try{
+ String port=new String(server.getInputStream().readNBytes(0));port=new java.io.BufferedReader(new java.io.InputStreamReader(server.getInputStream())).readLine();require(port!=null,"server startup");base="http://127.0.0.1:"+port;
+ page("/","Уральская тропа","Конжаковский","/routes","/signup","/style.css","/assets/konzhak.jpg","alt=");String css=HTTP.send(HttpRequest.newBuilder(URI.create(base+"/style.css")).GET().build(),HttpResponse.BodyHandlers.ofString()).body();require(css.contains("@media")&&css.contains("focus")&&css.length()>300,"responsive CSS");
+ if(phase>=2){page("/routes","Конжаковский","Таганай","Иремель","/trail");page("/trail","Конжаковский","Северный Урал","подготов","/signup");}
+ if(phase>=3){page("/signup","<form","method=\"post\"","action=\"/signup\"","name=\"name\"","name=\"email\"","name=\"route\"","<label","required","Демонстрацион");require(post("Анна","anna@example.org","konzhak")==201,"valid registration");require(post("","anna@example.org","konzhak")==400,"empty name");require(post("Анна","bad","konzhak")==400,"bad email");require(post("Анна","anna@example.org","unknown")==400,"unknown route");require(Files.readAllLines(data.resolve("requests.txt")).size()==1,"durable registration");}
+ if(phase>=4)page("/about","демонстрацион","Антонов","лиценз","данн","/assets/konzhak.jpg");
+ if(phase>=5){for(String name:List.of("<script>alert(1)</script>","a".repeat(101),"Ann\nOther"))require(post(name,"anna@example.org","konzhak")==400,"unsafe name");require(post("Анна","a".repeat(255)+"@example.org","konzhak")==400,"email too long");for(String path:List.of("/../README.md","/src/Booking.java"))require(HTTP.send(HttpRequest.newBuilder(URI.create(base+path)).GET().build(),HttpResponse.BodyHandlers.ofString()).statusCode()==404,"private file");}
+ System.out.println("PASS cumulative phase "+phase+" HTTP pages, registration and negative cases");
+ }finally{server.destroy();server.waitFor();}
+ }
+}
