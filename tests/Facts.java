@@ -1,0 +1,10 @@
+import java.net.*;import java.net.http.*;import java.nio.file.*;import java.util.*;
+class Facts {
+ static void check(boolean ok,String message){if(!ok)throw new AssertionError(message);}
+ public static void main(String[] args)throws Exception{
+ String name=args[0],path=Map.of("index","/","routes","/routes","trail","/trail").get(name);check(path!=null,"allowed fact page");Path classes=Files.createTempDirectory("ural-facts-classes"),data=Files.createTempDirectory("ural-facts-data");var command=new ArrayList<String>(List.of("javac","-encoding","UTF-8","-d",classes.toString()));try(var files=Files.list(Path.of("src"))){files.filter(p->p.toString().endsWith(".java")).forEach(p->command.add(p.toString()));}check(new ProcessBuilder(command).inheritIO().start().waitFor()==0,"javac");var pb=new ProcessBuilder("java","-cp",classes.toString(),"Server","0");pb.environment().put("URAL_DATA",data.toString());var server=pb.start();try{
+ String port=new java.io.BufferedReader(new java.io.InputStreamReader(server.getInputStream())).readLine();check(port!=null,"server started");var response=HttpClient.newHttpClient().send(HttpRequest.newBuilder(URI.create("http://127.0.0.1:"+port+path)).GET().build(),HttpResponse.BodyHandlers.ofString());check(response.statusCode()==200,"page status");String text=response.body().replaceAll("(?is)<!--.*?-->|<script\\b.*?</script>|<style\\b.*?</style>"," ").replaceAll("<[^>]*>"," ").replaceAll("\\s+"," ").toLowerCase(Locale.ROOT);
+ check(text.contains("северный урал"),name+" explicit canonical region label");if(name.equals("routes"))check(text.contains("южный урал"),"southern region");else check(text.contains("1569"),"verified height");for(String forbidden:List.of("1565","конжаково","высочайшая точка северного урала","высшая точка северного урала","самая высокая вершина северного урала"))check(!text.contains(forbidden),"unsupported statement: "+forbidden);System.out.println("PASS grounded visible geography "+name);
+ }finally{server.destroy();server.waitFor();}
+ }
+}
