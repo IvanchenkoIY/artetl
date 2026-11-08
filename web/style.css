@@ -131,3 +131,50 @@ section p { margin: 0 0 0.75rem; }
   .hero h1 { font-size: 1.4rem; }
   section h2 { font-size: 1.15rem; }
 }
+
+/* Form styling */
+form {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  max-width: 460px;
+  width: 100%;
+}
+
+label {
+  display: block;
+  font-weight: 600;
+  margin-bottom: 4px;
+  color: var(--ink);
+}
+
+input,
+select,
+button {
+  min-height: 44px;
+  font-size: 16px;
+  padding: 0.5rem 0.75rem;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  background: var(--surface);
+  color: var(--ink);
+  width: 100%;
+}
+
+button {
+  background: var(--pine);
+  color: #fff;
+  font-weight: 600;
+  cursor: pointer;
+  border: none;
+}
+
+button:hover {
+  background: var(--pine-dark);
+}
+
+#form-status {
+  margin-top: 1rem;
+  font-size: 1rem;
+  color: var(--ink);
+}
