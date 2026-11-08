@@ -5,8 +5,14 @@ def register(name, email, route):
     name = name.strip()
     if len(name) < 1 or len(name) > 100:
         raise ValueError("Invalid name")
+    if '<' in name or '>' in name:
+        raise ValueError("Invalid name")
+    if any(ord(c) < 32 or ord(c) == 127 for c in name):
+        raise ValueError("Invalid name")
     email = email.strip()
     if len(email) > 254:
+        raise ValueError("Invalid email")
+    if any(c.isspace() or ord(c) < 32 or ord(c) == 127 for c in email):
         raise ValueError("Invalid email")
     if "@" not in email:
         raise ValueError("Invalid email")
