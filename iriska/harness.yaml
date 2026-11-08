@@ -1,7 +1,1 @@
-schema: 1
-roles:
-  planner: iriska/agents/planner.md
-  developer: iriska/agents/developer.md
-  tester: iriska/agents/tester.md
-skills:
-  decomposition: iriska/skills/decomposition.md
+{"roles":{"analyst":"iriska/agents/analyst.md","architect":"iriska/agents/architect.md","chat":"iriska/agents/chat.md","decomposer":"iriska/agents/decomposer.md","developer":"iriska/agents/developer.md","planner":"iriska/agents/planner.md","tester":"iriska/agents/tester.md","validator":"iriska/agents/validator.md"},"schema":1,"skills":{"decomposition":"iriska/skills/decomposition.md"}}
