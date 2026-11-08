@@ -26,4 +26,4 @@ Implement only the current approved unit in the configured language, preserving 
 - Национальный парк «Таганай»: https://taganay.org/
 - Wikimedia Commons, Tokmakova Maria, описание Big Iremel mountain peak5: https://commons.wikimedia.org/wiki/File:Big_Iremel_mountain_peak_5.jpg
 
-Текущее исправление: в web/trail.html обязательно отдельный абзац ТОЧНО <p>Регион: Северный Урал. Высота: 1569 м.</p>. Удали 1565 метров, Конжаково, неподтверждённые расстояния и озёра. Сохрани навигацию, подключение CSS, описание подготовки и ссылку /signup. В web/routes.html сохрани три названия и ссылку /trail. Не утверждай исправление, если точной строки нет в возвращаемом content.
+Только если web/trail.html входит в currentUnit.paths текущей задачи: на этой странице обязательно отдельный абзац ТОЧНО <p>Регион: Северный Урал. Высота: 1569 м.</p>. Удали 1565 метров, Конжаково, неподтверждённые расстояния и озёра. Сохрани навигацию, подключение CSS, описание подготовки и ссылку /signup. В web/routes.html сохрани три названия и ссылку /trail. Не утверждай исправление, если точной строки нет в возвращаемом content.
