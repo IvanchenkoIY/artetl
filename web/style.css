@@ -112,6 +112,8 @@ font-size: 0.9rem;
 form {
 max-width: 460px;
 width: 100%;
+display: flex;
+flex-direction: column;
 }
 
 form label {
