@@ -1,1 +1,137 @@
-body{font-family:system-ui,sans-serif;margin:2rem;color:#19322c;background:#fff} img{max-width:100%}
+:root {
+--bg: #f7f9f7;
+--surface: #ffffff;
+--ink: #19322c;
+--muted: #4a635b;
+--accent: #2d5a45;
+--accent-soft: #e3efe9;
+--border: #c9d8d1;
+--focus: #1a4d38;
+}
+
+* {
+box-sizing: border-box;
+}
+
+body {
+margin: 0;
+font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+line-height: 1.6;
+color: var(--ink);
+background: var(--bg);
+}
+
+header {
+background: var(--surface);
+border-bottom: 1px solid var(--border);
+padding: 2rem 1.5rem;
+}
+
+header h1 {
+margin: 0 0 0.5rem;
+font-size: 2rem;
+font-weight: 700;
+letter-spacing: -0.02em;
+}
+
+header p {
+margin: 0;
+max-width: 76ch;
+color: var(--muted);
+}
+
+nav {
+background: var(--accent-soft);
+padding: 0.75rem 1.5rem;
+border-bottom: 1px solid var(--border);
+}
+
+nav a {
+display: inline-block;
+margin-right: 1.25rem;
+color: var(--accent);
+text-decoration: none;
+font-weight: 500;
+padding: 0.25rem 0;
+}
+
+nav a:last-child {
+margin-right: 0;
+}
+
+nav a:hover {
+text-decoration: underline;
+}
+
+nav a:focus-visible,
+a:focus-visible,
+button:focus-visible,
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible {
+outline: 3px solid var(--focus);
+outline-offset: 2px;
+}
+
+main {
+max-width: 76ch;
+margin: 0 auto;
+padding: 2rem 1.5rem;
+}
+
+section {
+background: var(--surface);
+border: 1px solid var(--border);
+border-radius: 8px;
+padding: 1.5rem;
+margin-bottom: 1.5rem;
+}
+
+section h2 {
+margin-top: 0;
+font-size: 1.35rem;
+color: var(--accent);
+}
+
+img {
+max-width: 100%;
+height: auto;
+border-radius: 6px;
+border: 1px solid var(--border);
+}
+
+footer {
+background: var(--surface);
+border-top: 1px solid var(--border);
+padding: 1.5rem;
+text-align: center;
+color: var(--muted);
+font-size: 0.9rem;
+}
+
+@media (max-width: 480px) {
+header {
+padding: 1.25rem 1rem;
+}
+
+header h1 {
+font-size: 1.5rem;
+}
+
+nav {
+padding: 0.5rem 1rem;
+}
+
+nav a {
+margin-right: 0.75rem;
+font-size: 0.95rem;
+}
+
+main {
+padding: 1.25rem 1rem;
+}
+
+section {
+padding: 1rem;
+}
+}
