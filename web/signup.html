@@ -24,6 +24,34 @@
 </select>
 <button type="submit">Отправить</button>
 </form>
+<div id="form-status" role="status" aria-live="polite"></div>
+<script>
+(function() {
+  var form = document.querySelector('form');
+  var status = document.getElementById('form-status');
+  if (!form || !status) return;
+  form.addEventListener('submit', function(e) {
+    e.preventDefault();
+    status.textContent = 'Отправка…';
+    var params = new URLSearchParams(new FormData(form));
+    fetch('/signup', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+      body: params.toString()
+    }).then(function(res) {
+      if (res.status === 201) {
+        status.textContent = 'Демонстрационная заявка принята. Реальное бронирование не выполняется.';
+      } else if (res.status === 400) {
+        status.textContent = 'Ошибка: проверьте правильность заполнения полей.';
+      } else {
+        status.textContent = 'Непредвиденная ошибка. Попробуйте позже.';
+      }
+    }).catch(function() {
+      status.textContent = 'Ошибка сети. Попробуйте позже.';
+    });
+  });
+})();
+</script>
 </main>
 </body>
 </html>
