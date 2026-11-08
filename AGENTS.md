@@ -19,3 +19,7 @@ Follow the approved objective in the configured project language. Preserve exist
 - Wikimedia Commons, автор Антонов Д. В.: описание фотографии Конжаковского Камня (1569 м, Северный Урал), https://commons.wikimedia.org/wiki/File:Г._Конжаковский_камень_(1569_м,_Северный_Урал)_с_г._Острая_Косьва_(1403_м)_в_июне.jpg
 - Национальный парк «Таганай»: https://taganay.org/
 - Wikimedia Commons, Tokmakova Maria, описание Big Iremel mountain peak5: https://commons.wikimedia.org/wiki/File:Big_Iremel_mountain_peak_5.jpg
+
+<!-- Iriska managed project rules: begin -->
+Работай только над текущей итерацией, два явно указанных файла. Не меняй тесты и сервер. Стандартная библиотека; локальные картинки. Вся приёмка текущей итерации — command-1. Дизайн: хвойный зелёный, светлая поверхность, читабельный русский текст.
+<!-- Iriska managed project rules: end -->
