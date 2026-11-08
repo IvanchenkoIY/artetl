@@ -1,1 +1,29 @@
-<!doctype html><html lang="ru"><meta charset="utf-8"><title>signup</title><body><h1>Страница готовится</h1></body></html>
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Заявка — Уральская тропа</title>
+<link rel="stylesheet" href="/style.css">
+</head>
+<body>
+<nav><a href="/">Главная</a> <a href="/routes">Маршруты</a> <a href="/trail">Конжаковский Камень</a></nav>
+<main>
+<h1>Демонстрационная заявка</h1>
+<p>Это демонстрационная форма. Оплата и реальное бронирование отсутствуют. Заявка не является подтверждением места.</p>
+<form method="post" action="/signup">
+<label for="name">Имя</label>
+<input type="text" id="name" name="name" required maxlength="100">
+<label for="email">Электронная почта</label>
+<input type="email" id="email" name="email" required maxlength="254">
+<label for="route">Маршрут</label>
+<select id="route" name="route" required>
+<option value="konzhak">Конжаковский Камень</option>
+<option value="taganay">Таганай</option>
+<option value="iremel">Иремель</option>
+</select>
+<button type="submit">Отправить</button>
+</form>
+</main>
+</body>
+</html>
