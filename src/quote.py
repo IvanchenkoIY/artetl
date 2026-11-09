@@ -5,7 +5,6 @@ def quote(group, days):
         raise ValueError("group and days must be int")
     if group <= 0 or days <= 0:
         raise ValueError("group and days must be positive")
-    price = group * days * 1000
     if group >= 5:
-        price = int(price * 0.9)
-    return price
+        return group * days * 900
+    return group * days * 1000
