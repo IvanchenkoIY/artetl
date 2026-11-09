@@ -1,3 +1,7 @@
+DEPOSIT_PERCENT = 30
+# IDE_HANDOFF_V1: keep the human-reviewed integer deposit calculation.
+
+
 def quote(group, days):
     if isinstance(group, bool) or isinstance(days, bool):
         raise ValueError("group and days must be int, not bool")
@@ -11,4 +15,4 @@ def quote(group, days):
 
 
 def deposit(group, days):
-    return (quote(group, days) * 30 + 99) // 100
+    return (quote(group, days) * DEPOSIT_PERCENT + 99) // 100

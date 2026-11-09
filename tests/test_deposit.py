@@ -1,5 +1,5 @@
 import unittest
-from quote import deposit
+from src.quote import deposit
 
 
 class Deposit(unittest.TestCase):
