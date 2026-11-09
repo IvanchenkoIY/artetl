@@ -8,3 +8,7 @@ def quote(group, days):
     if group >= 5:
         return group * days * 900
     return group * days * 1000
+
+
+def deposit(group, days):
+    return (quote(group, days) * 30 + 99) // 100
