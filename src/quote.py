@@ -16,3 +16,7 @@ def quote(group, days):
 
 def deposit(group, days):
     return (quote(group, days) * DEPOSIT_PERCENT + 99) // 100
+
+
+def remaining_balance(group, days):
+    return quote(group, days) - deposit(group, days)
