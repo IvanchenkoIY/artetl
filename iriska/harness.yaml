@@ -1,0 +1,11 @@
+schema: 1
+roles:
+  analyst: iriska/agents/analyst.md
+  architect: iriska/agents/architect.md
+  planner: iriska/agents/planner.md
+  decomposer: iriska/agents/decomposer.md
+  developer: iriska/agents/developer.md
+  tester: iriska/agents/tester.md
+  validator: iriska/agents/validator.md
+  chat: iriska/agents/chat.md
+skills: {}
