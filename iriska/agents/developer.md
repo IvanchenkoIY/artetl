@@ -14,3 +14,7 @@
 
 
 <!-- Iriska managed project instructions: end -->
+
+## Ручная передача из VS Code · IDE_JAVA_HANDOFF_V1
+
+Разработчик выделил DepositPolicy.DEPOSIT_PERCENT = 30 как публичную константу бизнес-правила. Сохраняй эту константу и комментарий IDE_JAVA_HANDOFF_V1. Используй существующие BookingQuote и QuoteFormatter через их фактические сигнатуры; не копируй расчёты в новые компоненты. Существующие 12 тестов и tests/Check.java не изменяй. Новые методы тестов должны быть public void test... без аргументов, с if/throw AssertionError (Java assert отключён).
